@@ -1,3 +1,4 @@
+import 'package:bookly_array/features/splash/presentation/views/widgets/sliding_logo.dart';
 import 'package:bookly_array/features/splash/presentation/views/widgets/sliding_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -12,20 +13,24 @@ class SplashViewBody extends StatefulWidget {
 }
 
 class _SplashViewBodyState extends State<SplashViewBody>
-    with SingleTickerProviderStateMixin {
-  late AnimationController animationController;
-  late Animation<Offset> slidingAnimation;
+    with TickerProviderStateMixin {
+  late AnimationController textAnimationController;
+  late Animation<Offset> textSlidingAnimation;
+  late AnimationController logoAnimationController;
+  late Animation<Offset> logoSlidingAnimation;
 
   @override
   void initState() {
     super.initState();
     textAnimation();
+    logoAnimation();
     navigateToHome();
   }
 
   @override
   void dispose() {
-    animationController.dispose();
+    textAnimationController.dispose();
+    logoAnimationController.dispose();
     super.dispose();
   }
 
@@ -36,9 +41,13 @@ class _SplashViewBodyState extends State<SplashViewBody>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Image.asset('assets/images/bookly_logo.png'),
+          SlidingLogo(
+            slidingAnimation: logoSlidingAnimation,
+          ),
           const SizedBox(height: 10),
-          SlidingText(slidingAnimation: slidingAnimation)
+          SlidingText(
+            slidingAnimation: textSlidingAnimation,
+          )
         ],
       ),
     );
@@ -54,14 +63,26 @@ class _SplashViewBodyState extends State<SplashViewBody>
   }
 
   void textAnimation() {
-    animationController = AnimationController(
+    textAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
     );
-    slidingAnimation = Tween<Offset>(
+    textSlidingAnimation = Tween<Offset>(
       begin: const Offset(0, 30),
       end: Offset.zero,
-    ).animate(animationController);
-    animationController.forward();
+    ).animate(textAnimationController);
+    textAnimationController.forward();
+  }
+
+  void logoAnimation() {
+    logoAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+    logoSlidingAnimation = Tween<Offset>(
+      begin: const Offset(0, -10),
+      end: Offset.zero,
+    ).animate(logoAnimationController);
+    logoAnimationController.forward();
   }
 }
