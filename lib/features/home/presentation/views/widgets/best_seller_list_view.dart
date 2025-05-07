@@ -14,9 +14,7 @@ class BestSellerListView extends StatelessWidget {
     return BlocBuilder<NewestBooksCubit, NewestBooksState>(
       builder: (context, state) {
         if (state is NewestBooksSuccess) {
-          return ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
+          return SliverList.builder(
             itemCount: state.books.length,
             itemBuilder: (context, index) {
               return Padding(
@@ -28,9 +26,9 @@ class BestSellerListView extends StatelessWidget {
             },
           );
         } else if (state is NewestBooksFailure) {
-          return ErrorWidget(state.errMessage);
+          return SliverToBoxAdapter(child: ErrorWidget(state.errMessage));
         } else {
-          return const CustomLoadingIndicator();
+          return SliverToBoxAdapter(child: const CustomLoadingIndicator());
         }
       },
     );
